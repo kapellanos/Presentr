@@ -28,7 +28,7 @@ protocol PresentrAnimation: UIViewControllerAnimatedTransitioning{
 }
 
 /// Transform block used to obtain the initial frame for the animation, given the finalFrame and the container's frame.
-typealias FrameTransformer = (finalFrame: CGRect, containerFrame: CGRect) -> CGRect
+typealias FrameTransformer = (_ finalFrame: CGRect, _ containerFrame: CGRect) -> CGRect
 
 extension PresentrAnimation{
     
@@ -36,10 +36,10 @@ extension PresentrAnimation{
         
         let containerView = transitionContext.containerView
         
-        let fromViewController = transitionContext.viewController(forKey: UITransitionContextFromViewControllerKey)
-        let toViewController = transitionContext.viewController(forKey: UITransitionContextToViewControllerKey)
-        let fromView = transitionContext.view(forKey: UITransitionContextFromViewKey)
-        let toView = transitionContext.view(forKey: UITransitionContextToViewKey)
+        let fromViewController = transitionContext.viewController(forKey: UITransitionContextViewControllerKey.from)
+        let toViewController = transitionContext.viewController(forKey: UITransitionContextViewControllerKey.to)
+        let fromView = transitionContext.view(forKey: UITransitionContextViewKey.from)
+        let toView = transitionContext.view(forKey: UITransitionContextViewKey.to)
         
         let isPresenting: Bool = (toViewController?.presentingViewController == fromViewController)
         
@@ -47,7 +47,7 @@ extension PresentrAnimation{
         let animatingView = isPresenting ? toView : fromView
         
         let finalFrameForVC = transitionContext.finalFrame(for: animatingVC!)
-        let initialFrameForVC = transform(finalFrame: finalFrameForVC, containerFrame: containerView.frame)
+        let initialFrameForVC = transform(finalFrameForVC, containerView.frame)
         
         let initialFrame = isPresenting ? initialFrameForVC : finalFrameForVC
         let finalFrame = isPresenting ? finalFrameForVC : initialFrameForVC

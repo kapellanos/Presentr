@@ -11,7 +11,7 @@ import UIKit
 public typealias AlertActionHandler = (() -> Void)
 
 /// Describes each action that is going to be shown in the 'AlertViewController'
-public class AlertAction{
+open class AlertAction{
     
     let title: String
     let style: AlertActionStyle
@@ -85,19 +85,19 @@ private struct ColorPalette {
 }
 
 /// UIViewController subclass that displays the alert
-public class AlertViewController: UIViewController {
+open class AlertViewController: UIViewController {
     
     /// Text that will be used as the title for the alert
-    public var titleText: String?
+    open var titleText: String?
     /// Text that will be used as the body for the alert
-    public var bodyText: String?
+    open var bodyText: String?
     
     /// If set to false, alert wont auto-dismiss the controller when an action is clicked. Dismissal will be up to the action's handler. Default is true.
-    public var autoDismiss: Bool = true
+    open var autoDismiss: Bool = true
     /// If autoDismiss is set to true, then set this property if you want the dismissal to be animated. Default is true.
-    public var dismissAnimated: Bool = true
+    open var dismissAnimated: Bool = true
     
-    private var actions = [AlertAction]()
+    fileprivate var actions = [AlertAction]()
     
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var bodyLabel: UILabel!
@@ -105,7 +105,7 @@ public class AlertViewController: UIViewController {
     @IBOutlet weak var secondButton: UIButton!
     @IBOutlet weak var firstButtonWidthConstraint: NSLayoutConstraint!
     
-    override public func viewDidLoad() {
+    override open func viewDidLoad() {
         super.viewDidLoad()
         
         if actions.isEmpty{
@@ -120,11 +120,11 @@ public class AlertViewController: UIViewController {
         setupButtons()
     }
     
-    override public func didReceiveMemoryWarning() {
+    override open func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
     
-    override public func updateViewConstraints() {
+    override open func updateViewConstraints() {
         if actions.count == 1{
             // If only one action, second button will have been removed from superview
             // So, need to add constraint for first button trailing to superview
@@ -148,26 +148,26 @@ public class AlertViewController: UIViewController {
      
      - parameter action: The 'AlertAction' to be added
      */
-    public func addAction(_ action: AlertAction){
+    open func addAction(_ action: AlertAction){
         guard actions.count < 2 else { return }
         actions += [action]
     }
     
     // MARK: Setup
     
-    private func setupFonts(){
+    fileprivate func setupFonts(){
         titleLabel.font = Font.Montserrat.font()
         bodyLabel.font = Font.SourceSansPro.font()
         firstButton.titleLabel?.font = Font.Montserrat.font(11.0)
         secondButton.titleLabel?.font = Font.Montserrat.font(11.0)
     }
     
-    private func setupLabels(){
+    fileprivate func setupLabels(){
         titleLabel.text = titleText ?? "Alert"
         bodyLabel.text = bodyText ?? "This is an alert."
     }
     
-    private func setupButtons(){
+    fileprivate func setupButtons(){
         guard let firstAction = actions.first else { return }
         apply(firstAction, toButton: firstButton)
         if actions.count == 2{
@@ -178,7 +178,7 @@ public class AlertViewController: UIViewController {
         }
     }
     
-    private func apply(_ action: AlertAction, toButton: UIButton){
+    fileprivate func apply(_ action: AlertAction, toButton: UIButton){
         let title = action.title.uppercased()
         let style = action.style
         toButton.setTitle(title, for: UIControlState())
@@ -216,20 +216,20 @@ public class AlertViewController: UIViewController {
 
 extension AlertViewController {
     
-    private func loadFonts(){
+    fileprivate func loadFonts(){
         self.loadFont(Font.Montserrat.rawValue)
         self.loadFont(Font.SourceSansPro.rawValue)
     }
     
     @discardableResult
-    private func loadFont(_ name: String) -> Bool{
-        let bundle = Bundle(for: self.dynamicType)
+    fileprivate func loadFont(_ name: String) -> Bool{
+        let bundle = Bundle(for: type(of: self))
         guard let fontPath = bundle.path(forResource: name, ofType: "ttf") else {
             return false
         }
         let data = try? Data(contentsOf: URL(fileURLWithPath: fontPath))
         var error: Unmanaged<CFError>?
-        let provider = CGDataProvider(data: data!)
+        let provider = CGDataProvider(data: data! as CFData)
         let font = CGFont(provider!)
         let success = CTFontManagerRegisterGraphicsFont(font, &error)
         if !success {

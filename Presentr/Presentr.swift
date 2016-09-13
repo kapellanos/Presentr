@@ -34,7 +34,7 @@ public enum PresentationType {
         case .alert:
             return (.custom(size: 270), .custom(size: 180))
         case .popup:
-            return (.default, .default)
+            return (.`default`, .`default`)
         case .topHalf, .bottomHalf:
             return (.full, .half)
         }
@@ -155,7 +155,7 @@ public enum ModalSize {
      */
     func calculateWidth(_ parentSize: CGSize) -> Float{
         switch self {
-        case .default:
+        case .`default`:
             return floorf(Float(parentSize.width) - (PresentrConstants.Values.defaultSideMargin * 2.0))
         case .half:
             return floorf(Float(parentSize.width) / 2.0)
@@ -175,7 +175,7 @@ public enum ModalSize {
      */
     func calculateHeight(_ parentSize: CGSize) -> Float{
         switch self {
-        case .default:
+        case .`default`:
             return floorf(Float(parentSize.height) * PresentrConstants.Values.defaultHeightPercentage)
         case .half:
             return floorf(Float(parentSize.height) / 2.0)
@@ -233,13 +233,13 @@ private struct PresentrConstants {
 }
 
 /// Main Presentr class. This is the point of entry for using the framework.
-public class Presentr: NSObject {
+open class Presentr: NSObject {
 
     /// This must be set during initialization, but can be changed to reuse a Presentr object.
-    public var presentationType: PresentationType
+    open var presentationType: PresentationType
     
     /// The type of transition animation to be used to present the view controller. This is optional, if not provided the default for each presentation type will be used.
-    public var transitionType: TransitionType?
+    open var transitionType: TransitionType?
 
     // MARK: Init
     
@@ -257,7 +257,7 @@ public class Presentr: NSObject {
      
      - returns: Returns a configured instance of 'AlertViewController'
      */
-    public static func alertViewController(title: String = PresentrConstants.Strings.alertTitle, body: String = PresentrConstants.Strings.alertBody) -> AlertViewController {
+    open static func alertViewController(_ title: String = PresentrConstants.Strings.alertTitle, body: String = PresentrConstants.Strings.alertBody) -> AlertViewController {
         let bundle = Bundle(for: self)
         let alertController = AlertViewController(nibName: "Alert", bundle: bundle)
         alertController.titleText = title
@@ -275,7 +275,7 @@ public class Presentr: NSObject {
      - parameter animated:     Animation boolean.
      - parameter completion:   Completion block.
      */
-    private func presentViewController(presentingViewController presentingVC: UIViewController, presentedViewController presentedVC: UIViewController, animated: Bool, completion: (() -> Void)?){
+    fileprivate func presentViewController(presentingViewController presentingVC: UIViewController, presentedViewController presentedVC: UIViewController, animated: Bool, completion: (() -> Void)?){
         let transition = transitionType ?? presentationType.defaultTransitionType()
         if let systemTransition = transition.systemTransition(){
             presentedVC.modalTransitionStyle = systemTransition
@@ -316,13 +316,13 @@ extension Presentr: UIViewControllerTransitioningDelegate{
     
     // MARK: - Private Helper's
     
-    private func presentationController(_ presented: UIViewController, presenting: UIViewController) -> PresentrController {
+    fileprivate func presentationController(_ presented: UIViewController, presenting: UIViewController) -> PresentrController {
         let presentationController = PresentrController(presentedViewController: presented, presenting: presenting)
         presentationController.presentationType = presentationType
         return presentationController
     }
     
-    private func animation() -> PresentrAnimation?{
+    fileprivate func animation() -> PresentrAnimation?{
         if let animation = transitionType?.animation() {
             return animation
         }else{

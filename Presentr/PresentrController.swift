@@ -20,7 +20,7 @@ class PresentrController: UIPresentationController, UIAdaptivePresentationContro
         }
     }
 
-    private var chromeView = UIView()
+    fileprivate var chromeView = UIView()
 
     // MARK: Init
     
@@ -32,14 +32,14 @@ class PresentrController: UIPresentationController, UIAdaptivePresentationContro
 
     // MARK: Setup
 
-    private func setupChromeView() {
+    fileprivate func setupChromeView() {
         let tap = UITapGestureRecognizer(target: self, action: #selector(chromeViewTapped))
         chromeView.addGestureRecognizer(tap)
         chromeView.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.7)
         chromeView.alpha = 0
     }
 
-    private func addCornerRadiusToPresentedView() {
+    fileprivate func addCornerRadiusToPresentedView() {
         guard presentationType != .bottomHalf || presentationType != .topHalf else {
             return
         }
@@ -47,7 +47,7 @@ class PresentrController: UIPresentationController, UIAdaptivePresentationContro
         presentedViewController.view.layer.masksToBounds = true
     }
 
-    private func removeCornerRadiusFromPresentedView() {
+    fileprivate func removeCornerRadiusFromPresentedView() {
         presentedViewController.view.layer.cornerRadius = 0
     }
 
@@ -61,23 +61,23 @@ class PresentrController: UIPresentationController, UIAdaptivePresentationContro
 
     // MARK: - Sizing Helper's
     
-    private func calculateWidth(_ parentSize: CGSize) -> Float {
+    fileprivate func calculateWidth(_ parentSize: CGSize) -> Float {
         let width = presentationType.size().width
         return width.calculateWidth(parentSize)
     }
 
-    private func calculateHeight(_ parentSize: CGSize) -> Float {
+    fileprivate func calculateHeight(_ parentSize: CGSize) -> Float {
         let height = presentationType.size().height
         return height.calculateHeight(parentSize)
     }
 
-    private func calculateCenterPoint() -> CGPoint {
+    fileprivate func calculateCenterPoint() -> CGPoint {
         let containerBounds = containerView!.bounds
         let position = presentationType.position()
         return position.calculatePoint(containerBounds)
     }
 
-    private func calculateOrigin(_ center: CGPoint, size: CGSize) -> CGPoint {
+    fileprivate func calculateOrigin(_ center: CGPoint, size: CGSize) -> CGPoint {
         let x: CGFloat = center.x - size.width / 2
         let y: CGFloat = center.y - size.height / 2
         return CGPoint(x: x, y: y)
