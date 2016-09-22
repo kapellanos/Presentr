@@ -303,7 +303,7 @@ public extension UIViewController {
 extension Presentr: UIViewControllerTransitioningDelegate{
     
     public func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
-        return presentationController(presented, presenting: presenting!)
+        return presentationController(presented, presenting: presenting)
     }
     
     public func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning?{
@@ -316,7 +316,7 @@ extension Presentr: UIViewControllerTransitioningDelegate{
     
     // MARK: - Private Helper's
     
-    fileprivate func presentationController(_ presented: UIViewController, presenting: UIViewController) -> PresentrController {
+    fileprivate func presentationController(_ presented: UIViewController, presenting: UIViewController?) -> PresentrController {
         let presentationController = PresentrController(presentedViewController: presented, presenting: presenting)
         presentationController.presentationType = presentationType
         return presentationController
